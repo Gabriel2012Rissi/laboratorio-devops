@@ -1,0 +1,7 @@
+# Git
+git/*
+!git/.keep
+
+# Sonarqube
+sonarqube/plugins/*
+!sonarqube/plugins/.keep
