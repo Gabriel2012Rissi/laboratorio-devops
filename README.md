@@ -1,4 +1,4 @@
-# Meu Laboratório DevOps
+# Laboratório DevOps
 
 Seguem algumas anotações úteis visando utilizar a pipeline **Git (GitLab ou Gitea)** + **SonarQube** + **Docker(DinD)** + **Jenkins** + **Docker Hub**. Lembre-se de que esse passo-a-passo é uma aproximação, então, podem haver alguns passos que serão levemente diferentes à depender das versões que serão utilizadas.
 
@@ -160,19 +160,3 @@ environment:
 5. Configurações -> Webhook -> Adicionar webhook -> Gitea:
    - URL de destino: [http://jenkins:8080/multibranch-webhook-trigger/invoke?token=my-token]()
 6. Faça qualquer alteração em um dos branches do projeto, o webhook irá disparar uma trigger de construção no Jenkins.
-
-#### Deploy com Kubernetes
-
-1. Instale o plugin [Kubernetes CLI](https://plugins.jenkins.io/kubernetes-cli);
-2. Adicione o arquivo 'kubeconfig.yml' às credenciais;
-3. Na pipeline, adicione o stage abaixo:
-
-```
-stage('Deploy Kubernetes') {
-    steps {
-        withKubeConfig([credentialsId: 'kubeconfig']) {
-            sh 'kubectl apply -f deployment.yaml'
-        }
-    }
-}
-```
