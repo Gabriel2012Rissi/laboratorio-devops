@@ -8,8 +8,11 @@ services:
     environment:
       DOCKER_TLS_CERTDIR: "/certs"
     volumes:
+      # Docker(DinD) Certificates
       - dind-certs-ca:/certs/ca
       - dind-certs-client:/certs/client
+      # Jenkins Data
+      # Enabling access to jenkins-data volume
       - jenkins-data:/var/jenkins_home
     command: ["--storage-driver=overlay2"]
     networks:
@@ -22,10 +25,13 @@ services:
     container_name: gitea
     restart: always
     volumes:
+      # Timezone
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - gitea-data:/var/lib/gitea
+      # Gitea Configuration
       - ./gitea:/etc/gitea
+      # Gitea Data
+      - gitea-data:/var/lib/gitea
     ports:
       - "8180:3000"
       - "8122:2222"
@@ -48,8 +54,10 @@ services:
       # Resolvendo o problema do plugin 'HTML Publisher'
       JAVA_OPTS: -Dhudson.model.DirectoryBrowserSupport.CSP="script-src 'unsafe-inline'"
     volumes:
+      # Docker(DinD) Certificates
       - dind-certs-ca:/certs/ca:ro
       - dind-certs-client:/certs/client:ro
+      # Jenkins Data
       - jenkins-data:/var/jenkins_home
     ports:
       - "8280:8080"
@@ -66,15 +74,19 @@ services:
       SONAR_WEB_JAVAADDITIONALOPTS: "-javaagent:./extensions/plugins/sonarqube-community-branch-plugin-1.8.2.jar=web"
       SONAR_CE_JAVAADDITIONALOPTS: "-javaagent:./extensions/plugins/sonarqube-community-branch-plugin-1.8.2.jar=ce"
     volumes:
+      # SonarQube Configuration
       - sonarqube-conf:/opt/sonarqube/conf
-      - sonarqube-data:/opt/sonarqube/data
+      # SonarQube Logs
       - sonarqube-logs:/opt/sonarqube/logs
+      # SonarQube Extensions
       - sonarqube-extensions:/opt/sonarqube/extensions
-      # Plugins do SonarQube
+      # SonarQube Plugins
       - ./sonarqube/plugins:/opt/sonarqube/extensions/plugins
+      # SonarQube Data
+      - sonarqube-data:/opt/sonarqube/data
     ports:
       - "8380:9000"
-    shm_size: "256M"
+    # shm_size: "256M"
     networks:
       devops:
         aliases:
@@ -86,9 +98,9 @@ volumes:
   gitea-data: {}
   jenkins-data: {}
   sonarqube-conf: {}
-  sonarqube-data: {}
-  sonarqube-extensions: {}
   sonarqube-logs: {}
+  sonarqube-extensions: {}
+  sonarqube-data: {}
 
 networks:
   devops:
